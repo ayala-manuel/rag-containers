@@ -38,10 +38,8 @@ async def build_payload(
 
             all_chunks.extend(chunks)
             all_metadata.extend([serialize_metadata(metadata)] * len(chunks))
-        print("Chunks a embedder:", all_chunks)
-        print(type(all_chunks), type(all_metadata))  # Debugging output
+            
         embeddings = await get_embeddings(all_chunks)
-        print("Embeddings generated:", embeddings)  # Debugging output
 
         for chunk, embedding, metadata in zip(all_chunks, embeddings, all_metadata):
             payloads.append({
@@ -49,6 +47,7 @@ async def build_payload(
                 "embedding": embedding,
                 "metadata": metadata
             })
+            print(payloads[-1])
 
         return payloads
     except Exception as e:
