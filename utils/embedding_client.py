@@ -1,3 +1,5 @@
+# utils/embedding_client.py
+
 import httpx
 from fastapi import HTTPException
 
@@ -9,7 +11,7 @@ async def get_embeddings(texts: list[str]) -> list[list[float]]:
     try:
         response = await http_client.post(
             EMBEDDINGS_SERVICE_URL,
-            json={"texts": [texts]}
+            json={"texts": texts}
         )
         response.raise_for_status()
         data = response.json()

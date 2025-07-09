@@ -17,7 +17,6 @@ from api.dependencies import verify_api_key
 from utils.payload import build_payload, build_query_vector
 from typing import List
 
-# TODO: EMBEDDING GENERATION ?
 router = APIRouter()
 
 @router.get("/", summary="Bienvenida a la API de Mercados Qdrant")
