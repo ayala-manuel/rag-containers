@@ -145,7 +145,7 @@ router = APIRouter()
 async def test_connection():
     async with httpx.AsyncClient() as client:
         try:
-            response = await client.get("http://embeddings_service:8001/embed")
+            response = await client.post("http://embeddings_service:8001/embed")
             return {"status_code": response.status_code, "text": response.text}
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Connection test failed: {str(e)}")
