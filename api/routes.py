@@ -136,39 +136,15 @@ async def search_collection(collection_name: str, body: SearchRequest):
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
     
 # --------------------------
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, Field
-from typing import List
 import httpx
+import asyncio
 
-router = APIRouter()
-
-EMBEDDINGS_SERVICE_URL = "http://embeddings_service:8000/embed"
-
-class TextsRequest(BaseModel):
-    texts: List[str] = Field(..., description="Lista de textos para generar embeddings")
-
-class EmbeddingsResponse(BaseModel):
-    embeddings: List[List[float]] = Field(..., description="Lista de vectores embeddings")
-
-@router.post("/embed-proxy", response_model=EmbeddingsResponse)
-async def embed_proxy(request: TextsRequest):
-    if not request.texts:
-        raise HTTPException(status_code=400, detail="No texts provided")
-
-    async with httpx.AsyncClient(timeout=10.0) as client:
+async def test():
+    async with httpx.AsyncClient() as client:
         try:
-            response = await client.post(
-                EMBEDDINGS_SERVICE_URL,
-                json={"texts": request.texts}
-            )
-            response.raise_for_status()
-            data = response.json()
-            embeddings = data.get("embeddings", [])
-            if not embeddings:
-                raise HTTPException(status_code=500, detail="Empty embeddings returned")
-            return EmbeddingsResponse(embeddings=embeddings)
-        except httpx.RequestError as e:
-            raise HTTPException(status_code=503, detail=f"Error de conexión con embeddings_service: {str(e)}")
-        except httpx.HTTPStatusError as e:
-            raise HTTPException(status_code=e.response.status_code, detail=f"Error en embeddings_service: {e.response.text}")
+            r = await client.get("http://embeddings_service:8001/embed")
+            print(r.status_code, r.text)
+        except Exception as e:
+            print("Error:", e)
+
+asyncio.run(test())
