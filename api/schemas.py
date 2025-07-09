@@ -18,3 +18,22 @@ class DocumentItem(BaseModel):
 class SearchRequest(BaseModel):
     query: str = Field(..., description="Texto de consulta para generar el vector de búsqueda")
     limit: int = Field(10, description="Número máximo de resultados a retornar")
+
+import json
+example = '''
+[
+  {
+    "text": "string",
+    "metadata": {
+      "title": "string",
+      "date": "2025-07-09T16:44:46.431Z",
+      "tags": ["string"],
+      "images": ["string"]
+    }
+  }
+]
+'''
+
+data = json.loads(example)
+docs = [DocumentItem(**item) for item in data]
+print(docs)
