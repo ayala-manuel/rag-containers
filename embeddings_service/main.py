@@ -15,7 +15,7 @@ async def embed_texts(request: TextRequest):
         raise HTTPException(status_code=400, detail="No texts provided")
 
     try:
-        embeddings = await asyncio.to_thread(model.encode, request.texts, convert_to_numpy=True)
+        embeddings = await asyncio.to_thread(model.encode, request.texts)
         return EmbeddingResponse(embeddings=embeddings.tolist())
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Embedding generation failed: {str(e)}")
