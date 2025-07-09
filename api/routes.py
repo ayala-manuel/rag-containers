@@ -136,15 +136,16 @@ async def search_collection(collection_name: str, body: SearchRequest):
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
     
 # --------------------------
+from fastapi import APIRouter, HTTPException
 import httpx
-import asyncio
 
-async def test():
+router = APIRouter()
+
+@router.get("/test-connection")
+async def test_connection():
     async with httpx.AsyncClient() as client:
         try:
-            r = await client.get("http://embeddings_service:8001/embed")
-            print(r.status_code, r.text)
+            response = await client.get("http://embeddings_service:8001/embed")
+            return {"status_code": response.status_code, "text": response.text}
         except Exception as e:
-            print("Error:", e)
-
-asyncio.run(test())
+            raise HTTPException(status_code=500, detail=f"Connection test failed: {str(e)}")
