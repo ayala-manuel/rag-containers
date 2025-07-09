@@ -95,6 +95,7 @@ async def upload_documents(
         raise HTTPException(status_code=400, detail="No se proporcionaron documentos para subir")
 
     payloads = await build_payload(data)
+    print(payloads[-1])
     
     # Verificar si hay error en alguno de los payloads
     for item in payloads:

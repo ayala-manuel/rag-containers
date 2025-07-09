@@ -38,7 +38,7 @@ async def build_payload(
 
             all_chunks.extend(chunks)
             all_metadata.extend([serialize_metadata(metadata)] * len(chunks))
-            
+
         embeddings = await get_embeddings(all_chunks)
 
         for chunk, embedding, metadata in zip(all_chunks, embeddings, all_metadata):
@@ -47,7 +47,6 @@ async def build_payload(
                 "embedding": embedding,
                 "metadata": metadata
             })
-            print(payloads[-1])
 
         return payloads
     except Exception as e:
