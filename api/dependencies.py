@@ -2,7 +2,7 @@
 
 from fastapi import Security, HTTPException
 from fastapi.security import APIKeyHeader
-from starlette import HTTP_401_UNAUTHORIZED
+from starlette.status import HTTP_401_UNAUTHORIZED
 from utils.env import get_env_var, load_dotenv
 
 load_dotenv()

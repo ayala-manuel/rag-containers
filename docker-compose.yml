@@ -10,10 +10,14 @@ services:
       - app-network
 
   api:
-    build: ./api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
     container_name: api
     ports:
       - "8000:8000"
+    volumes:
+      - ./:/app
     depends_on:
       - qdrant
       - embeddings_service
@@ -25,10 +29,14 @@ services:
       - app-network
 
   embeddings_service:
-    build: ./embeddings_service
+    build:
+      context: ./embeddings_service
+      dockerfile: Dockerfile
     container_name: embeddings_service
     ports:
       - "8001:8001"
+    volumes:
+      - ./:/app
     networks:
       - app-network
 
