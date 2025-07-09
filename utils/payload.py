@@ -35,6 +35,9 @@ async def build_payload(
             text = doc.text
             metadata = doc.metadata.dict() if doc.metadata else {}
             chunks = text_splitter(text, max_words=max_words, overlap=overlap)
+            print(f"Chunks for text '{text[:30]}...': {chunks}")  # Debugging output
+            print(f"Metadata for text '{text[:30]}...': {metadata}")  # Debugging output
+            print("text:", text)
 
             all_chunks.extend(chunks)
             all_metadata.extend([serialize_metadata(metadata)] * len(chunks))
