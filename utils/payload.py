@@ -29,7 +29,6 @@ async def build_payload(
     try:
         payloads = []
         for doc in data:
-            print("Processing document:", doc)
             text = doc.text
             metadata = doc.metadata.dict() if doc.metadata else {}
             chunks = text_splitter(text, max_words=max_words, overlap=overlap)
@@ -43,6 +42,7 @@ async def build_payload(
                     "embedding": embedding,
                     "metadata": serialized_metadata
                 })
+                print("payload:", payloads[-1])  # Debugging line to check payload content
         return payloads
     except Exception as e:
         return [{"error": str(e)}]
