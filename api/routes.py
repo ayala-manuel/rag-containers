@@ -14,7 +14,7 @@ from core.client import (
     search
 )
 from api.dependencies import verify_api_key
-from utils.payload import build_payload
+from utils.payload import build_payload, build_query_vector
 from typing import List
 
 # TODO: EMBEDDING GENERATION ?
@@ -115,15 +115,22 @@ async def upload_documents(
 
 @router.post("/collections/{collection_name}/search", summary="Buscar documentos en una colección")
 async def search_collection(collection_name: str, body: SearchRequest):
-    response = search(collection_name, body.query_vector, body.limit)
-    if "error" in response:
-        raise HTTPException(status_code=500, detail=response["error"])
+    try:
+        query_vector = await build_query_vector(body.query)
 
-    return {
-        "status": "success",
-        "message": "Search completed",
-        "data": {
-            "collection_name": response["collection_name"],
-            "results": response["results"]
+        response = search(collection_name, query_vector, body.limit)
+
+        if "error" in response:
+            raise HTTPException(status_code=500, detail=response["error"])
+
+        return {
+            "status": "success",
+            "message": "Search completed",
+            "data": {
+                "collection_name": response["collection_name"],
+                "results": response["results"]
+            }
         }
-    }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")

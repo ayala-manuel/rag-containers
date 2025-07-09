@@ -42,7 +42,23 @@ async def build_payload(
                     "embedding": embedding,
                     "metadata": serialized_metadata
                 })
-                print("payload:", payloads[-1])  # Debugging line to check payload content
+                print("payload:", payloads[-1])
         return payloads
     except Exception as e:
         return [{"error": str(e)}]
+    
+async def build_query_vector(query: str) -> list:
+    """
+    Genera un vector de embedding para una consulta de búsqueda.
+
+    Args:
+        query (str): Texto de búsqueda.
+
+    Returns:
+        list: Vector de embedding correspondiente al query.
+    """
+    try:
+        embeddings = await get_embeddings([query])
+        return embeddings[0]
+    except Exception as e:
+        raise RuntimeError(f"Error generating query embedding: {str(e)}")

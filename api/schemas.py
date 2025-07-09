@@ -16,5 +16,5 @@ class DocumentItem(BaseModel):
     metadata: Optional[Metadata] = Field(None, description="Metadatos asociados al documento")
 
 class SearchRequest(BaseModel):
-    query_vector: List[float]
-    limit: int = 10
+    query: str = Field(..., description="Texto de consulta para generar el vector de búsqueda")
+    limit: int = Field(10, description="Número máximo de resultados a retornar")
