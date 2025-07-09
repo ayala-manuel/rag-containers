@@ -15,7 +15,6 @@ class DocumentItem(BaseModel):
     text: str = Field(..., description="Texto completo del documento")
     metadata: Optional[Metadata] = Field(None, description="Metadatos asociados al documento")
 
-
 class SearchRequest(BaseModel):
     query_vector: List[float]
     limit: int = 10

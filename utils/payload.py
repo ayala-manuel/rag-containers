@@ -32,6 +32,6 @@ def build_payload(
         chunks = text_splitter(text, max_words=max_words, overlap=overlap)
         serialized_metadata = serialize_metadata(metadata)
 
-        return [{"text": chunk, "embeddings" : get_embeddings(chunk), "metadata": serialized_metadata} for chunk in chunks]
+        return [{"text": chunk, "embedding" : get_embeddings(chunk), "metadata": serialized_metadata} for chunk in chunks]
     except Exception as e:
         return [{"error": str(e)}]
