@@ -20,6 +20,17 @@ from typing import List
 # TODO: EMBEDDING GENERATION ?
 router = APIRouter()
 
+@router.get("/", summary="Bienvenida a la API de Mercados Qdrant")
+async def welcome():
+    """
+    Endpoint de bienvenida que devuelve un mensaje de bienvenida.
+    """
+    return {
+        "message": "Bienvenido a la API de Mercados Qdrant",
+        "version": "1.0.0",
+        "description": "El API se encuentra corriendo correctamente",
+    }
+
 @router.get("/ping")
 async def ping():
     """
