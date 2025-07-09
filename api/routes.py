@@ -134,18 +134,3 @@ async def search_collection(collection_name: str, body: SearchRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
-    
-# --------------------------
-from fastapi import APIRouter, HTTPException
-import httpx
-
-router = APIRouter()
-
-@router.get("/test-connection")
-async def test_connection():
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.post("http://embeddings_service:8001/embed")
-            return {"status_code": response.status_code, "text": response.text}
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Connection test failed: {str(e)}")

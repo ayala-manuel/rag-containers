@@ -1,7 +1,7 @@
 import httpx
 from fastapi import HTTPException
 
-EMBEDDINGS_SERVICE_URL = "http://embeddings_service:8000/embed"
+EMBEDDINGS_SERVICE_URL = "http://embeddings_service:8001/embed"
 
 http_client = httpx.AsyncClient(timeout=10.0)
 
