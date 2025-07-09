@@ -23,7 +23,7 @@ def create_collection(collection_name: str):
         client.recreate_collection(
             collection_name=collection_name,
             vectors_config=VectorParams(
-                size=768,  # TODO: Comprobar que embeddings utilizar y ajustar el tamaño
+                size=384,  # TODO: Comprobar que embeddings utilizar y ajustar el tamaño
                 distance=Distance.COSINE
             )
         )
