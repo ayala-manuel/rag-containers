@@ -148,14 +148,11 @@ class EmbeddingsResponse(BaseModel):
 
 @router.post("/embed", response_model=EmbeddingsResponse)
 async def embed_texts(request: EmbeddingsRequest):
-    url = "http://embeddings_service:8001/embed"
-    async with httpx.AsyncClient(timeout=10) as client:
-        try:
-            response = await client.post(url, json={"texts": request.texts})
-            response.raise_for_status()
-            data = response.json()
-            return EmbeddingsResponse(embeddings=data.get("embeddings", []))
-        except httpx.RequestError as e:
-            raise HTTPException(status_code=503, detail=f"Error connecting to embeddings_service: {str(e)}")
-        except httpx.HTTPStatusError as e:
-            raise HTTPException(status_code=e.response.status_code, detail=f"Error from embeddings_service: {e.response.text}")
+    from utils.embedding_client import get_embeddings
+    try:
+        embeddings = await get_embeddings(request.texts)
+        return EmbeddingsResponse(embeddings=embeddings)
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(status_code=e.response.status_code, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating embeddings: {str(e)}")
