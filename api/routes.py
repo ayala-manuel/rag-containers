@@ -97,10 +97,10 @@ async def upload_documents(
     payloads = await build_payload(data)
     print(payloads[-1])
     
-    # Verificar si hay error en alguno de los payloads
-    for item in payloads:
-        if "error" in item:
-            raise HTTPException(status_code=400, detail=item["error"])
+    # # Verificar si hay error en alguno de los payloads
+    # for item in payloads:
+    #     if "error" in item:
+    #         raise HTTPException(status_code=400, detail=item["error"])
     
     # Insertar cada chunk
     for item in payloads:
