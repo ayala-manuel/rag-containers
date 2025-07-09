@@ -35,7 +35,8 @@ async def build_payload(
             serialized_metadata = serialize_metadata(metadata)
 
             for chunk in chunks:
-                embedding = await get_embeddings(chunk)
+                embedding = await get_embeddings([chunk])
+                embedding = embedding[0]
                 payloads.append({
                     "text": chunk,
                     "embedding": embedding,
