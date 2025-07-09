@@ -29,6 +29,7 @@ async def build_payload(
     try:
         payloads = []
         for doc in data:
+            print("Processing document:", doc)
             text = doc.text
             metadata = doc.metadata.dict() if doc.metadata else {}
             chunks = text_splitter(text, max_words=max_words, overlap=overlap)

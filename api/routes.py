@@ -92,7 +92,6 @@ async def upload_documents(
     collection_name: str = Path(..., description="Nombre de la colección"),
     data: List[DocumentItem] = Body(..., description="Lista de documentos a subir")
 ):
-    print("Received data:", data)
     if not data:
         raise HTTPException(status_code=400, detail="No se proporcionaron documentos para subir")
 
