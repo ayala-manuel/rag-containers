@@ -5,7 +5,7 @@ from utils.chunking import text_splitter
 from utils.serialization import serialize_metadata
 from utils.embedding_client import get_embeddings
 
-def build_payload(
+async def build_payload(
         data: List[Dict[str, str]],
         max_words: int = 1000,
         overlap: int = 100
@@ -35,9 +35,10 @@ def build_payload(
             serialized_metadata = serialize_metadata(metadata)
 
             for chunk in chunks:
+                embedding = await get_embeddings(chunk)
                 payloads.append({
                     "text": chunk,
-                    "embedding": get_embeddings(chunk),
+                    "embedding": embedding,
                     "metadata": serialized_metadata
                 })
         return payloads
