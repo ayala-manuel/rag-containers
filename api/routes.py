@@ -140,8 +140,6 @@ from pydantic import BaseModel
 from typing import List
 import httpx
 
-router = APIRouter()
-
 class EmbeddingsRequest(BaseModel):
     texts: List[str]
 
