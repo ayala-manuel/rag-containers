@@ -58,6 +58,7 @@ def insert_data(collection_name: str, data: list):
         dict: Resultado del upsert o error en caso de excepción.
     """
     try:
+        print("Data to insert:", data)
         points = [
             PointStruct(
                 id=generate_uuid4(),
