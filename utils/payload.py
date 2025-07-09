@@ -27,11 +27,19 @@ def build_payload(
             - "metadata": metadatos serializados.
     """
     try:
-        text = data[0].get("text", "")
-        metadata = data[0].get("metadata", {})
-        chunks = text_splitter(text, max_words=max_words, overlap=overlap)
-        serialized_metadata = serialize_metadata(metadata)
+        payloads = []
+        for doc in data:
+            text = doc.text
+            metadata = doc.metadata.dict() if doc.metadata else {}
+            chunks = text_splitter(text, max_words=max_words, overlap=overlap)
+            serialized_metadata = serialize_metadata(metadata)
 
-        return [{"text": chunk, "embedding" : get_embeddings(chunk), "metadata": serialized_metadata} for chunk in chunks]
+            for chunk in chunks:
+                payloads.append({
+                    "text": chunk,
+                    "embedding": get_embeddings(chunk),
+                    "metadata": serialized_metadata
+                })
+        return payloads
     except Exception as e:
         return [{"error": str(e)}]
