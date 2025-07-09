@@ -11,8 +11,8 @@ from utils.serialization import serialize_metadata
 import numpy as np
 
 client = QdrantClient(
-    host="localhost",
-    port=6333
+    host="qdrant",
+    port= 6333
 )
 
 def create_collection(collection_name: str):
