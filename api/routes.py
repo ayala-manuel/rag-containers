@@ -103,10 +103,9 @@ async def upload_documents(
     #         raise HTTPException(status_code=400, detail=item["error"])
     
     # Insertar cada chunk
-    for item in payloads:
-        insert_result = insert_data(collection_name, item)
-        if "error" in insert_result:
-            raise HTTPException(status_code=500, detail=f"Error insertando datos: {insert_result['error']}")
+    result = insert_data(collection_name, payloads)
+    if "error" in result:
+        raise HTTPException(status_code=500, detail=f"Error insertando datos: {result['error']}")
 
     return {
         "status": "success",
