@@ -3,7 +3,7 @@
 from nltk.tokenize import sent_tokenize
 import nltk
 
-# Descargar recursos necesarios (puedes hacerlo una vez en tu entorno)
+
 nltk.download('punkt')
 
 def text_splitter(text: str, max_words: int = 300, overlap: int = 50) -> list[str]:
@@ -37,7 +37,7 @@ def text_splitter(text: str, max_words: int = 300, overlap: int = 50) -> list[st
                     count += len(sent_words)
                 else:
                     chunks.append(" ".join(chunk))
-                    # overlap en oraciones: tomar las últimas 'overlap' oraciones del chunk anterior
+
                     chunk = chunk[-overlap:] if overlap < len(chunk) else chunk
                     chunk.append(sent)
                     count = sum(len(s.split()) for s in chunk)

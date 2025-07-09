@@ -59,6 +59,7 @@ async def build_query_vector(query: str) -> list:
     """
     try:
         embeddings = await get_embeddings([query])
+        print("embeddings:", embeddings)
         return embeddings[0]
     except Exception as e:
         raise RuntimeError(f"Error generating query embedding: {str(e)}")
