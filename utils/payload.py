@@ -38,7 +38,7 @@ async def build_payload(
 
             all_chunks.extend(chunks)
             all_metadata.extend([serialize_metadata(metadata)] * len(chunks))
-
+        print("Chunks a embedder:", all_chunks)
         embeddings = await get_embeddings(all_chunks)
 
         for chunk, embedding, metadata in zip(all_chunks, embeddings, all_metadata):
