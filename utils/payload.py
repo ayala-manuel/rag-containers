@@ -35,14 +35,13 @@ async def build_payload(
             text = doc.text
             metadata = doc.metadata.dict() if doc.metadata else {}
             chunks = text_splitter(text, max_words=max_words, overlap=overlap)
-            print(f"Chunks for text '{text[:30]}...': {chunks}")  # Debugging output
-            print(f"Metadata for text '{text[:30]}...': {metadata}")  # Debugging output
-            print("text:", text)
 
             all_chunks.extend(chunks)
             all_metadata.extend([serialize_metadata(metadata)] * len(chunks))
         print("Chunks a embedder:", all_chunks)
+        print(type(all_chunks), type(all_metadata))  # Debugging output
         embeddings = await get_embeddings(all_chunks)
+        print("Embeddings generated:", embeddings)  # Debugging output
 
         for chunk, embedding, metadata in zip(all_chunks, embeddings, all_metadata):
             payloads.append({
