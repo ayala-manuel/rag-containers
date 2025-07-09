@@ -28,21 +28,26 @@ async def build_payload(
     """
     try:
         payloads = []
+        all_chunks = []
+        all_metadata = []
+
         for doc in data:
             text = doc.text
             metadata = doc.metadata.dict() if doc.metadata else {}
             chunks = text_splitter(text, max_words=max_words, overlap=overlap)
-            serialized_metadata = serialize_metadata(metadata)
 
-            for chunk in chunks:
-                embedding = await get_embeddings([chunk])
-                embedding = embedding[0]
-                payloads.append({
-                    "text": chunk,
-                    "embedding": embedding,
-                    "metadata": serialized_metadata
-                })
-                print("payload:", payloads[-1])
+            all_chunks.extend(chunks)
+            all_metadata.extend([serialize_metadata(metadata)] * len(chunks))
+
+        embeddings = await get_embeddings(all_chunks)
+
+        for chunk, embedding, metadata in zip(all_chunks, embeddings, all_metadata):
+            payloads.append({
+                "text": chunk,
+                "embedding": embedding,
+                "metadata": metadata
+            })
+
         return payloads
     except Exception as e:
         return [{"error": str(e)}]
