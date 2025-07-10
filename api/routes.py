@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, Path, Body
 from api.schemas import (
     CreateCollectionRequest,
     DocumentItem,
-    SearchRequest
+    SearchRequest,
+    TitlesToDelete
     )
 from core.client import (
     return_collection_names,
@@ -158,20 +159,26 @@ async def get_documents(collection_name: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error retrieving documents: {str(e)}")
     
-@router.delete("/collections/{collection_name}/docs", summary="Eliminar documento por título")
-async def delete_document(collection_name: str, title: str = Body(..., description="Título del documento a eliminar")):
-    """
-    Elimina un documento de una colección por su título.
-    """
-    try:
+@router.post("/collections/{collection_name}/docs/delete", summary="Eliminar documentos por títulos")
+async def delete_documents(collection_name: str, body: TitlesToDelete):
+    errors = []
+    results = []
+    for title in body.titles:
         result = delete_document_by_title(collection_name, title)
         if "error" in result:
-            raise HTTPException(status_code=500, detail=result["error"])
-        
+            errors.append({"title": title, "error": result["error"]})
+        else:
+            results.append(result)
+
+    if errors:
         return {
-            "status": "success",
-            "message": f"Document with title '{title}' deleted from collection '{collection_name}'"
+            "status": "partial_success",
+            "message": "Algunos documentos no pudieron ser eliminados",
+            "errors": errors,
+            "results": results
         }
-    
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error deleting document: {str(e)}")
+    return {
+        "status": "success",
+        "message": "Documentos eliminados correctamente",
+        "results": results
+    }

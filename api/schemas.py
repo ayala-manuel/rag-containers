@@ -29,3 +29,6 @@ class EmbeddingsRequest(BaseModel):
 
 class EmbeddingsResponse(BaseModel):
     embeddings: List[List[float]]
+
+class TitlesToDelete(BaseModel):
+    titles: List[str]
