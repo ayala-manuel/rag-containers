@@ -84,7 +84,7 @@ def insert_data(collection_name: str, data: list):
             "collection_name": collection_name
         }
     
-def search(collection_name: str, query_vector: list, limit: int = 10):
+def search(collection_name: str, query_vector: list, limit: int = 10, filters = None):
     """
     Search for similar vectors in the specified collection.
     """
@@ -93,7 +93,7 @@ def search(collection_name: str, query_vector: list, limit: int = 10):
             collection_name=collection_name,
             query_vector=query_vector,
             limit=limit,
-            query_filter=None,  # TODO: Implementar filtros (tags, date range...)
+            filter = filters
         )
         return {
             "status": "Search completed",

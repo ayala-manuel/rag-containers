@@ -15,6 +15,7 @@ from core.client import (
 )
 from api.dependencies import verify_api_key
 from utils.payload import build_payload, build_query_vector
+from utils.query_filters import build_filter
 from typing import List
 
 router = APIRouter()
@@ -95,7 +96,6 @@ async def upload_documents(
         raise HTTPException(status_code=400, detail="No se proporcionaron documentos para subir")
 
     payloads = await build_payload(data)
-    print(payloads[-1])
     
     # # Verificar si hay error en alguno de los payloads
     # for item in payloads:
@@ -116,6 +116,7 @@ async def upload_documents(
 async def search_collection(collection_name: str, body: SearchRequest):
     try:
         query_vector = await build_query_vector(body.query)
+        filters = build_filter(body.metadata)
 
         response = search(collection_name, query_vector, body.limit)
 
@@ -133,26 +134,3 @@ async def search_collection(collection_name: str, body: SearchRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
-    
-# -----------------------------------------------------
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-from typing import List
-import httpx
-
-class EmbeddingsRequest(BaseModel):
-    texts: List[str]
-
-class EmbeddingsResponse(BaseModel):
-    embeddings: List[List[float]]
-
-@router.post("/embed", response_model=EmbeddingsResponse)
-async def embed_texts(request: EmbeddingsRequest):
-    from utils.embedding_client import get_embeddings
-    try:
-        embeddings = await get_embeddings(request.texts)
-        return EmbeddingsResponse(embeddings=embeddings)
-    except httpx.HTTPStatusError as e:
-        raise HTTPException(status_code=e.response.status_code, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generating embeddings: {str(e)}")
