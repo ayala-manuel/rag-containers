@@ -11,7 +11,9 @@ from core.client import (
     create_collection,
     delete_collection,
     insert_data,
-    search
+    search,
+    get_collection_documents,
+    delete_document_by_title
 )
 from api.dependencies import verify_api_key
 from utils.payload import build_payload, build_query_vector
@@ -136,3 +138,40 @@ async def search_collection(collection_name: str, body: SearchRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
+    
+@router.get("/collections/{collection_name}/docs", summary="Ver documentos en una colección")
+async def get_documents(collection_name: str):
+    """
+    Obtiene todos los documentos de una colección.
+    """
+    try:
+        documents = get_collection_documents(collection_name)
+        if "error" in documents:
+            raise HTTPException(status_code=500, detail=documents["error"])
+        
+        return {
+            "status": "success",
+            "message": f"Documents retrieved from collection '{collection_name}'",
+            "data": documents
+        }
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error retrieving documents: {str(e)}")
+    
+@router.delete("/collections/{collection_name}/docs", summary="Eliminar documento por título")
+async def delete_document(collection_name: str, title: str = Body(..., description="Título del documento a eliminar")):
+    """
+    Elimina un documento de una colección por su título.
+    """
+    try:
+        result = delete_document_by_title(collection_name, title)
+        if "error" in result:
+            raise HTTPException(status_code=500, detail=result["error"])
+        
+        return {
+            "status": "success",
+            "message": f"Document with title '{title}' deleted from collection '{collection_name}'"
+        }
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error deleting document: {str(e)}")

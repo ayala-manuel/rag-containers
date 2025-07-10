@@ -119,4 +119,61 @@ def return_collection_names():
     except Exception as e:
         return {"error": str(e)}
     
-# TODO: Implementar funciones para obtener metadatos y eliminar puntos específicos
+def get_collection_documents(collection_name: str):
+    """
+    Returns all documents in the specified collection, grouped by metadata 'title'.
+    """
+    try:
+        points, _ = client.scroll(
+            collection_name=collection_name,
+            limit=1000  # Adjust as needed
+        )
+        grouped = {}
+        for point in points:
+            title = None
+            metadata = point.payload.get("metadata", {})
+            if isinstance(metadata, dict):
+                title = metadata.get("title")
+            if title not in grouped:
+                grouped[title] = []
+            grouped[title].append({
+                "id": point.id,
+                "payload": point.payload
+            })
+        return {
+            "status": "Documents retrieved and grouped by title successfully",
+            "collection_name": collection_name,
+            "documents_by_title": grouped
+        }
+    except Exception as e:
+        return {"error": str(e), "collection_name": collection_name}
+    
+def delete_document_by_title(collection_name: str, title: str):
+    """
+    Deletes all documents in the specified collection with the given title in metadata.
+    """
+    try:
+        points, _ = client.scroll(
+            collection_name=collection_name,
+            limit=1000  # Adjust as needed
+        )
+        ids_to_delete = [
+            point.id for point in points
+            if point.payload.get("metadata", {}).get("title") == title
+        ]
+        
+        if not ids_to_delete:
+            return {"status": "No documents found with the specified title", "collection_name": collection_name}
+        
+        client.delete(
+            collection_name=collection_name,
+            points_selector={"ids": ids_to_delete}
+        )
+        
+        return {
+            "status": f"Documents with title '{title}' deleted successfully",
+            "collection_name": collection_name,
+            "deleted_ids": ids_to_delete
+        }
+    except Exception as e:
+        return {"error": str(e), "collection_name": collection_name}
