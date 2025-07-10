@@ -34,8 +34,8 @@ def build_filter(metadata: Optional[QueryMetadata]) -> Optional[Filter]:
             FieldCondition(
                 key="date",
                 range=Range(
-                    gte=datetime_to_iso_z(date_1),
-                    lte=datetime_to_iso_z(date_2)
+                    gte=date_1.timestamp(),
+                    lte=date_2.timestamp()
                 )
             )
         )
