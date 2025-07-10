@@ -116,7 +116,8 @@ async def upload_documents(
 async def search_collection(collection_name: str, body: SearchRequest):
     try:
         query_vector = await build_query_vector(body.query)
-        filters = build_filter(body.metadata) if body.metadata else None
+        print(body.metadata)
+        filters = build_filter(body.metadata)
 
         response = search(collection_name, query_vector, body.limit, filters)
 
