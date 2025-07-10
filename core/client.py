@@ -4,7 +4,8 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import (
     VectorParams,
     Distance,
-    PointStruct
+    PointStruct,
+    PointIdsList
 )
 from utils.ids import generate_uuid4
 from utils.serialization import serialize_metadata
@@ -167,7 +168,7 @@ def delete_document_by_title(collection_name: str, title: str):
         
         client.delete(
             collection_name=collection_name,
-            points_selector={"ids": ids_to_delete}
+            points_selector=PointIdsList(points=ids_to_delete)
         )
         
         return {
