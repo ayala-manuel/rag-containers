@@ -118,7 +118,7 @@ async def search_collection(collection_name: str, body: SearchRequest):
         query_vector = await build_query_vector(body.query)
         filters = build_filter(body.metadata)
 
-        response = search(collection_name, query_vector, body.limit)
+        response = search(collection_name, query_vector, body.limit, filters)
 
         if "error" in response:
             raise HTTPException(status_code=500, detail=response["error"])
