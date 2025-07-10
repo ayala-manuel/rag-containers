@@ -9,6 +9,7 @@ def build_filter(metadata: Optional[QueryMetadata]) -> Optional[Filter]:
 
     conditions = []
 
+    # 1. Tags
     if metadata.tags:
         conditions.append(
             FieldCondition(
@@ -17,24 +18,23 @@ def build_filter(metadata: Optional[QueryMetadata]) -> Optional[Filter]:
             )
         )
 
+    # 2. Dates
     if metadata.date_1:
         date_format = "%Y-%m-%d"
         date_1 = datetime.strptime(metadata.date_1, date_format).replace(tzinfo=timezone.utc)
+
         if metadata.date_2:
             date_2 = datetime.strptime(metadata.date_2, date_format).replace(tzinfo=timezone.utc)
         else:
             date_2 = date_1 + timedelta(days=30)
             date_1 = date_1 - timedelta(days=30)
 
-        gte_str = date_1.isoformat(timespec='seconds').replace('+00:00', 'Z')
-        lte_str = (date_2 + timedelta(hours=23, minutes=59, seconds=59)).isoformat(timespec='seconds').replace('+00:00', 'Z')
-
         conditions.append(
             FieldCondition(
                 key="date",
                 range=Range(
-                    gte=gte_str,
-                    lte=lte_str
+                    gte=date_1.timestamp(),
+                    lte=date_2.timestamp()
                 )
             )
         )

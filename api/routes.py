@@ -118,6 +118,7 @@ async def search_collection(collection_name: str, body: SearchRequest):
         query_vector = await build_query_vector(body.query)
         print(body.metadata)
         filters = build_filter(body.metadata)
+        print("Filters:", filters)
 
         response = search(collection_name, query_vector, body.limit, filters)
 
