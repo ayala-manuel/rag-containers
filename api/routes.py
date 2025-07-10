@@ -117,7 +117,6 @@ async def search_collection(collection_name: str, body: SearchRequest):
     try:
         query_vector = await build_query_vector(body.query)
         filters = build_filter(body.metadata) if body.metadata else None
-        print(filters)
 
         response = search(collection_name, query_vector, body.limit, filters)
 

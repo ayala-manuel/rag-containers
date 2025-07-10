@@ -92,8 +92,7 @@ def search(collection_name: str, query_vector: list, limit: int = 10, filters = 
         results = client.search(
             collection_name=collection_name,
             query_vector=query_vector,
-            limit=limit,
-            filter = filters
+            limit=limit
         )
         return {
             "status": "Search completed",
