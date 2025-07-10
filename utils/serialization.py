@@ -15,7 +15,7 @@ def serialize_metadata(metadata: Dict[str, Any]) -> Dict[str, Any]:
             elif isinstance(v, datetime):
                 serialized[k] = v.timestamp()
             else:
-                serialized[k] = v  # Dejarlo como está si ya es numérico
+                serialized[k] = v
         else:
             serialized[k] = v
     return serialized
