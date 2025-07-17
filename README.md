@@ -129,3 +129,4 @@ pip install -r requirements.txt
 cd ../embeddings_service
 pip install -r requirements.txt
 ```
+.
