@@ -94,7 +94,8 @@ def search(collection_name: str, query_vector: list, limit: int = 10, filters = 
             collection_name=collection_name,
             query_vector=query_vector,
             limit=limit,
-            query_filter=filters if filters else None
+            query_filter=filters if filters else None,
+            score_threshold=0.8
         )
         return {
             "status": "Search completed",
