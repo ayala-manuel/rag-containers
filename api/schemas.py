@@ -8,6 +8,7 @@ class Metadata(BaseModel):
     title: str = Field(..., description="Título del documento")
     date: str = Field(..., description="Fecha asociada al documento")
     tags: List[str] = Field(..., description="Lista de etiquetas")
+    url : Optional[str] = Field(None, description="URL del documento")
     images: Optional[List[str]] = Field(None, description="URLs o identificadores de imágenes")
 
 class DocumentItem(BaseModel):
