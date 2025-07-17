@@ -12,7 +12,7 @@ def build_filter(metadata: Optional[QueryMetadata]) -> Optional[Filter]:
     if metadata.tags:
         conditions.append(
             FieldCondition(
-                key="tags",
+                key="metadata.tags",
                 match=MatchAny(any=metadata.tags)
             )
         )
@@ -33,7 +33,7 @@ def build_filter(metadata: Optional[QueryMetadata]) -> Optional[Filter]:
 
         conditions.append(
             FieldCondition(
-                key="date",
+                key="metadata.date",
                 range=Range(
                     gte=timestamp_1,
                     lte=timestamp_2
