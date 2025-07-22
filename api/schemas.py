@@ -3,6 +3,7 @@ from typing import List, Optional
 
 class CreateCollectionRequest(BaseModel):
     name: str
+    vectorsize: int = Field(384, description="Tamaño del vector para la colección, por defecto 384")
 
 class Metadata(BaseModel):
     title: str = Field(..., description="Título del documento")

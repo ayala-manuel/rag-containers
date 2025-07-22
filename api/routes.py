@@ -65,7 +65,7 @@ async def create_new_collection(payload: CreateCollectionRequest):
     """
     Crea una nueva colección en Qdrant con el nombre proporcionado.
     """
-    result = create_collection(payload.name)
+    result = create_collection(payload.name, payload.vectorsize)
 
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])

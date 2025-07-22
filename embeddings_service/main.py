@@ -5,7 +5,7 @@ from utils.env import load_env, get_env_var
 import asyncio
 
 load_env()
-model_name = get_env_var("EMBED_MODEL", default="all-MiniLM-L6-v2")
+model_name = get_env_var("EMBED_MODEL", default="sentence-transformers/distiluse-base-multilingual-cased-v2")
 model = SentenceTransformer(model_name)
 
 app = FastAPI(title="Embeddings Service", version="1.0.0")

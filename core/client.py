@@ -16,7 +16,7 @@ client = QdrantClient(
     port= 6333
 )
 
-def create_collection(collection_name: str):
+def create_collection(collection_name: str, vectorsize: int = 384):
     """
     Create a collection in Qdrant with the specified name.
     """
@@ -24,7 +24,7 @@ def create_collection(collection_name: str):
         client.recreate_collection(
             collection_name=collection_name,
             vectors_config=VectorParams(
-                size=384,  # TODO: Comprobar que embeddings utilizar y ajustar el tamaño
+                size=vectorsize,  # TODO: Comprobar que embeddings utilizar y ajustar el tamaño
                 distance=Distance.COSINE
             )
         )
