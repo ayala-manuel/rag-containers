@@ -85,7 +85,7 @@ def insert_data(collection_name: str, data: list):
             "collection_name": collection_name
         }
     
-def search(collection_name: str, query_vector: list, limit: int = 10, filters = None):
+def search(collection_name: str, query_vector: list, limit: int = 10, filters = None, threshold: float = 0.3):
     """
     Search for similar vectors in the specified collection.
     """
@@ -95,7 +95,7 @@ def search(collection_name: str, query_vector: list, limit: int = 10, filters = 
             query_vector=query_vector,
             limit=limit,
             query_filter=filters if filters else None,
-            score_threshold=0.6
+            score_threshold=threshold
         )
         return {
             "status": "Search completed",

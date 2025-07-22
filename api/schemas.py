@@ -25,6 +25,7 @@ class SearchRequest(BaseModel):
     query: str = Field(..., description="Texto de consulta para generar el vector de búsqueda")
     metadata : Optional[QueryMetadata] = Field(None, description="Metadatos opcionales para filtrar resultados")
     limit: int = Field(10, description="Número máximo de resultados a retornar")
+    threshold: float = Field(0.3, description="Umbral de similitud para filtrar resultados")
 
 class EmbeddingsRequest(BaseModel):
     texts: List[str]

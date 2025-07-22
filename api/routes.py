@@ -123,7 +123,7 @@ async def search_collection(collection_name: str, body: SearchRequest):
         filters = build_filter(body.metadata)
         print("Filters:", filters)
 
-        response = search(collection_name, query_vector, body.limit, filters)
+        response = search(collection_name, query_vector, body.limit, filters, body.threshold)
 
         if "error" in response:
             raise HTTPException(status_code=500, detail=response["error"])
