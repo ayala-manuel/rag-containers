@@ -4,11 +4,17 @@ from api.schemas import QueryMetadata
 from typing import Optional
 
 def build_filter(metadata: Optional[QueryMetadata]) -> Optional[Filter]:
+    """
+    Genera un Filter para Qdrant:
+      - MatchAny sobre metadata.tags
+      - Range sobre metadata.date (en ms UTC), ampliado ±30d si no hay date_2
+    """
     if metadata is None:
         return None
 
     conditions = []
 
+    # Filtrar por tags
     if metadata.tags:
         conditions.append(
             FieldCondition(
@@ -17,27 +23,27 @@ def build_filter(metadata: Optional[QueryMetadata]) -> Optional[Filter]:
             )
         )
 
+    # Filtrar por rango de fechas
     if metadata.date_1:
-        date_format = "%Y-%m-%d"
-        date_1 = datetime.strptime(metadata.date_1, date_format).replace(tzinfo=timezone.utc)
+        # Parsear date_1 (ISO) y normalizar a UTC
+        dt1 = datetime.fromisoformat(metadata.date_1)
+        dt1 = dt1.replace(tzinfo=timezone.utc)
 
+        # Si hay date_2 la parseamos, si no usamos ±30 días
         if metadata.date_2:
-            date_2 = datetime.strptime(metadata.date_2, date_format).replace(tzinfo=timezone.utc)
+            dt2 = datetime.fromisoformat(metadata.date_2)
+            dt2 = dt2.replace(tzinfo=timezone.utc)
         else:
-            date_2 = date_1 + timedelta(days=30)
-            date_1 = date_1 - timedelta(days=30)
+            dt2 = dt1 + timedelta(days=30)
+            dt1 = dt1 - timedelta(days=30)
 
-        # Convert to UNIX timestamps
-        timestamp_1 = date_1.timestamp()
-        timestamp_2 = date_2.timestamp()
+        ms1 = int(dt1.timestamp() * 1000)
+        ms2 = int(dt2.timestamp() * 1000)
 
         conditions.append(
             FieldCondition(
                 key="metadata.date",
-                range=Range(
-                    gte=timestamp_1,
-                    lte=timestamp_2
-                )
+                range=Range(gte=ms1, lte=ms2)
             )
         )
 
