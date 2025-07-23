@@ -93,13 +93,14 @@ async def delete_existing_collection(collection_name: str = Path(..., descriptio
 @router.post("/collections/{collection_name}/upload", summary="Subir documentos a una colección")
 async def upload_documents(
     collection_name: str = Path(..., description="Nombre de la colección"),
-    data: List[DocumentItem] = Body(..., description="Lista de documentos a subir")
+    data: List[DocumentItem] = Body(..., description="Lista de documentos a subir"),
+    chunk: bool = Body(True, description="Indica si se debe hacer chunking de los textos")
 ):
     if not data:
         raise HTTPException(status_code=400, detail="No se proporcionaron documentos para subir")
 
-    payloads = await build_payload(data)
-    
+    payloads = await build_payload(data, chunk=chunk)
+
     # # Verificar si hay error en alguno de los payloads
     # for item in payloads:
     #     if "error" in item:

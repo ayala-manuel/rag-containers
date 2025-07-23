@@ -8,7 +8,8 @@ from utils.embedding_client import get_embeddings
 async def build_payload(
         data: List[Dict[str, str]],
         max_words: int = 1000,
-        overlap: int = 100
+        overlap: int = 100,
+        chunk : bool = True
 ) -> List[Dict]:
     """
     Procesa un documento para dividirlo en chunks, obtener embeddings y preparar payloads.
@@ -30,25 +31,43 @@ async def build_payload(
         payloads = []
         all_chunks = []
         all_metadata = []
+        if not chunk:
+            # Si no se requiere chunking, procesar todo el texto como un solo chunk
+            for doc in data:
+                text = doc["text"]
+                metadata = doc.get("metadata", {})
+                all_chunks.append(text)
+                all_metadata.append(serialize_metadata(metadata))
+            embeddings = await get_embeddings(all_chunks)
+            for chunk, embedding, metadata in zip(all_chunks, embeddings, all_metadata):
+                payloads.append({
+                    "text": chunk,
+                    "embedding": embedding,
+                    "metadata": metadata
+                })
+            return payloads
+        
+        else:
+            # Si se requiere chunking, procesar cada documento
 
-        for doc in data:
-            text = doc.text
-            metadata = doc.metadata.dict() if doc.metadata else {}
-            chunks = text_splitter(text, max_words=max_words, overlap=overlap)
+            for doc in data:
+                text = doc.text
+                metadata = doc.metadata.dict() if doc.metadata else {}
+                chunks = text_splitter(text, max_words=max_words, overlap=overlap)
 
-            all_chunks.extend(chunks)
-            all_metadata.extend([serialize_metadata(metadata)] * len(chunks))
+                all_chunks.extend(chunks)
+                all_metadata.extend([serialize_metadata(metadata)] * len(chunks))
 
-        embeddings = await get_embeddings(all_chunks)
+            embeddings = await get_embeddings(all_chunks)
 
-        for chunk, embedding, metadata in zip(all_chunks, embeddings, all_metadata):
-            payloads.append({
-                "text": chunk,
-                "embedding": embedding,
-                "metadata": metadata
-            })
+            for chunk, embedding, metadata in zip(all_chunks, embeddings, all_metadata):
+                payloads.append({
+                    "text": chunk,
+                    "embedding": embedding,
+                    "metadata": metadata
+                })
 
-        return payloads
+            return payloads
     except Exception as e:
         return [{"error": str(e)}]
     
