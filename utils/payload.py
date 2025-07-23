@@ -43,12 +43,11 @@ async def build_payload(
             all_metadata.extend([serialize_metadata(metadata)] * len(chunks))
 
             embeddings = await get_embeddings([all_chunks])
-            for chunk, embedding, metadata in zip(all_chunks, embeddings, all_metadata):
-                payloads.append({
-                    "text": chunk,
-                    "embedding": embedding,
-                    "metadata": metadata
-                })
+            payloads.append({
+                "text": all_chunks,
+                "embedding": embeddings,
+                "metadata": all_metadata
+            })
             return payloads
         
         else:
