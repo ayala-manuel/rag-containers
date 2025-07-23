@@ -33,12 +33,14 @@ async def build_payload(
         all_metadata = []
         if not chunk:
             # Si no se requiere chunking, procesar todo el texto como un solo chunk
-            for doc in data:
-                text = doc["text"]
-                metadata = doc.get("metadata", {})
-                all_chunks.append(text)
-                all_metadata.append(serialize_metadata(metadata))
-            embeddings = await get_embeddings(all_chunks)
+            text = data[0]['text']
+            metadata = data[0]['metadata']
+            chunks = text_splitter(text, max_words=max_words, overlap=overlap)
+
+            all_chunks.extend(chunks)
+            all_metadata.extend([serialize_metadata(metadata)] * len(chunks))
+
+            embeddings = await get_embeddings([all_chunks])
             for chunk, embedding, metadata in zip(all_chunks, embeddings, all_metadata):
                 payloads.append({
                     "text": chunk,
@@ -49,7 +51,6 @@ async def build_payload(
         
         else:
             # Si se requiere chunking, procesar cada documento
-
             for doc in data:
                 text = doc.text
                 metadata = doc.metadata.dict() if doc.metadata else {}
