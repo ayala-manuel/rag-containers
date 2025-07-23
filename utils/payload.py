@@ -34,6 +34,8 @@ async def build_payload(
         if not chunk:
             # Si no se requiere chunking, procesar todo el texto como un solo chunk
             text = data[0]['text']
+            print(f"Processing text without chunking: {text[:50]}...")  # Log first 50 chars
+            print(type(data[0]['text']))
             metadata = data[0]['metadata']
             chunks = text_splitter(text, max_words=max_words, overlap=overlap)
 
