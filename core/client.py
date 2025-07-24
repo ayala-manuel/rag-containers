@@ -180,7 +180,7 @@ def delete_document_by_title(collection_name: str, title: str):
     except Exception as e:
         return {"error": str(e), "collection_name": collection_name}
 
-def filter_documents(collection_name: str, filters: dict):
+def doc_filter(collection_name: str, filters: dict):
     """
     Filters documents in the specified collection based on the provided filters.
     """

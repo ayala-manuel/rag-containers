@@ -35,3 +35,7 @@ class EmbeddingsResponse(BaseModel):
 
 class TitlesToDelete(BaseModel):
     titles: List[str]
+
+class FilterRequest(BaseModel):
+    metadata : Optional[QueryMetadata] = Field(None, description="Metadatos opcionales para filtrar resultados")
+    limit: int = Field(10, description="Número máximo de resultados a retornar")
