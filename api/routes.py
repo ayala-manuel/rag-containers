@@ -185,7 +185,7 @@ async def delete_documents(collection_name: str, body: TitlesToDelete):
         "results": results
     }
 
-@router.post("/api/collections/{collection_name}/filter")
+@router.post("/collections/{collection_name}/filter")
 async def filter_documents(
     collection_name: str = Path(..., description="Nombre de la colección"),
     body: SearchRequest = Body(..., description="Criterios de búsqueda y filtros")
