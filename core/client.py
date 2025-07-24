@@ -187,7 +187,7 @@ def doc_filter(collection_name: str, filters: dict):
     try:
         results = client.scroll(
             collection_name=collection_name,
-            query_filter=filters,
+            scroll_filter=filters,
             limit=1000
         )
         return {
