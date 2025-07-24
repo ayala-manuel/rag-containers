@@ -179,3 +179,26 @@ def delete_document_by_title(collection_name: str, title: str):
         }
     except Exception as e:
         return {"error": str(e), "collection_name": collection_name}
+
+def filter_documents(collection_name: str, filters: dict):
+    """
+    Filters documents in the specified collection based on the provided filters.
+    """
+    try:
+        results = client.scroll(
+            collection_name=collection_name,
+            query_filter=filters,
+            limit=1000
+        )
+        return {
+            "status": "Documents filtered successfully",
+            "collection_name": collection_name,
+            "results": [
+                {
+                    "id": point.id,
+                    "payload": point.payload
+                } for point in results[0]
+            ]
+        }
+    except Exception as e:
+        return {"error": str(e), "collection_name": collection_name}

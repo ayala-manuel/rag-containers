@@ -14,7 +14,8 @@ from core.client import (
     insert_data,
     search,
     get_collection_documents,
-    delete_document_by_title
+    delete_document_by_title,
+    filter_documents
 )
 from api.dependencies import verify_api_key
 from utils.payload import build_payload, build_query_vector
@@ -183,3 +184,16 @@ async def delete_documents(collection_name: str, body: TitlesToDelete):
         "message": "Documentos eliminados correctamente",
         "results": results
     }
+
+@router.post("/api/collections/{collection_name}/filter")
+async def filter_documents(
+    collection_name: str = Path(..., description="Nombre de la colección"),
+    body: SearchRequest = Body(..., description="Criterios de búsqueda y filtros")
+):
+    """
+    Filtra documentos en una colección según los criterios de búsqueda y filtros proporcionados.
+    """
+    filters = build_filter(body.metadata)
+    response = filter_documents(collection_name, None, body.limit, filters, body.threshold)
+    return response
+        
